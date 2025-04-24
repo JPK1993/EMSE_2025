@@ -30,29 +30,53 @@ document.experiment_definition(
         ],
         repetitions:4,                    // Anzahl der Wiederholungen pro Treatmentcombination
         accepted_responses:["0", "1","2","3", "4", "5", "6", "7", "8", "9"], // Tasten, die vom Experiment als Eingabe akzeptiert werden
-        task_configuration:(t)=>{
-            // Das hier ist der Code, der jeder Task im Experiment den Code zuweist.
-            // Im Feld code steht der Quellcode, der angezeigt wird,
-            // in "expected_answer" das, was die Aufgabe als Lösung erachtet
-            // In das Feld "given_answer" trägt das Experiment ein, welche Taste gedrückt wurde
-            //
-            // Ein Task-Objekt hat ein Feld treatment_combination, welches ein Array von Treatment-Objekten ist.
-            // Ein Treatment-Objekt hat zwei Felder:
-            //     variable - Ein Variable-Objekt, welches das Feld name hat (der Name der Variablen);
-            //     value - Ein String, in dem der Wert des Treatments steht.
+        task_configuration: (t) => {
+            // Same logic for both treatments for now
+            let totalConditions = random_int(); // total number of conditional blocks (0–9)
+            let codeLines = [];
 
-            if (t.treatment_combination[0].value=="A")
-                t.code = "Dummy"
-            else
-                t.code = "Another Dummy";
-
-            t.expected_answer = "" + random_int();
+            let x = (totalConditions * 3 + random_int()) % 10;
+            let y = (totalConditions + random_int() * 2) % 10;
 
 
-            // im Feld after_task_string steht eine Lambda-Funktion, die ausgeführt wird
-            // wenn eine Task beantwortet wurde. Das Ergebnis der Funktion muss ein String
-            // sein.
-            t.after_task_string = ()=>"Some nice text between the tasks";
+            // Begin Java class and method
+            codeLines.push("public class Example {");
+            codeLines.push("    public static void main(String[] args) {");
+            codeLines.push(`        int x = ${x};`);
+            codeLines.push(`        int y = ${y};`);
+            codeLines.push("        int z = x + y;");
+
+            // Add 'totalConditions' number of if/else if/else statements
+            for (let i = 0; i < totalConditions; i++) {
+                let rnd = random_int();
+                if (rnd < 3) {
+                    codeLines.push("        if (z > 0) {");
+                    codeLines.push("            System.out.println(\"if block\");");
+                    codeLines.push("        }");
+                } else if (rnd < 6) {
+                    codeLines.push("        else if (z > 1) {");
+                    codeLines.push("            System.out.println(\"else-if block\");");
+                    codeLines.push("        }");
+                } else {
+                    codeLines.push("        else {");
+                    codeLines.push("            System.out.println(\"else block\");");
+                    codeLines.push("        }");
+                }
+            }
+
+            // Close method and class
+            codeLines.push("    }");
+            codeLines.push("}");
+
+            // Assign the generated code to both treatment types
+            if (t.treatment_combination[0].value === "A" || t.treatment_combination[0].value === "B") {
+                t.code = codeLines.join("\n");
+            }
+
+            t.expected_answer = "" + totalConditions;
+
+            t.after_task_string = () => "Some nice text between the tasks";
         }
+
     }
 );
