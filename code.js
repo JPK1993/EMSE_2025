@@ -31,53 +31,84 @@ document.experiment_definition(
         repetitions:4,                    // Anzahl der Wiederholungen pro Treatmentcombination
         accepted_responses:["0", "1","2","3", "4", "5", "6", "7", "8", "9"], // Tasten, die vom Experiment als Eingabe akzeptiert werden
         task_configuration: (t) => {
-            // Die Gleiche Logik für beide Treatments
-            let totalConditions = random_int();
-            let codeLines = [];
+            // Das hier ist der Code, der jeder Task im Experiment den Code zuweist.
 
-            let x = (totalConditions * 3 + random_int()) % 10;
-            let y = (totalConditions + random_int() * 2) % 10;
+            if (t.treatment_combination[0].value == "A") {
+                // Treatment A Logik
+                let totalConditions = random_int();
+                let codeLines = [];
 
+                let x = (totalConditions * 3 + random_int()) % 10;
+                let y = (totalConditions + random_int() * 2) % 10;
 
-            // Anfang
-            codeLines.push("public class Example {");
-            codeLines.push("    public static void main(String[] args) {");
-            codeLines.push(`        int x = ${x};`);
-            codeLines.push(`        int y = ${y};`);
-            codeLines.push("        int z = x + y;");
+                codeLines.push("public class Example {");
+                codeLines.push("    public static void main(String[] args) {");
+                codeLines.push(`        int x = ${x};`);
+                codeLines.push(`        int y = ${y};`);
+                codeLines.push("        int z = x + y;");
 
-            // Codeschnipsel-Generator
-            for (let i = 0; i < totalConditions; i++) {
-                let rnd = random_int();
-                if (rnd < 3) {
-                    codeLines.push("        if (z > 0) {");
-                    codeLines.push("            System.out.println(\"if block\");");
-                    codeLines.push("        }");
-                } else if (rnd < 6) {
-                    codeLines.push("        else if (z > 1) {");
-                    codeLines.push("            System.out.println(\"else-if block\");");
-                    codeLines.push("        }");
-                } else {
-                    codeLines.push("        else {");
-                    codeLines.push("            System.out.println(\"else block\");");
-                    codeLines.push("        }");
+                for (let i = 0; i < totalConditions; i++) {
+                    let rnd = random_int();
+                    if (rnd < 3) {
+                        codeLines.push("        if (z > 0) {");
+                        codeLines.push("            System.out.println(\"if block\");");
+                        codeLines.push("        }");
+                    } else if (rnd < 6) {
+                        codeLines.push("        else if (z > 1) {");
+                        codeLines.push("            System.out.println(\"else-if block\");");
+                        codeLines.push("        }");
+                    } else {
+                        codeLines.push("        else {");
+                        codeLines.push("            System.out.println(\"else block\");");
+                        codeLines.push("        }");
+                    }
                 }
-            }
 
-            //Ende
+                codeLines.push("    }");
+                codeLines.push("}");
 
-            codeLines.push("    }");
-            codeLines.push("}");
-
-            // Den generierten Code beiden Treatments zuweisen
-            if (t.treatment_combination[0].value === "A" || t.treatment_combination[0].value === "B") {
                 t.code = codeLines.join("\n");
+                t.expected_answer = "" + totalConditions;
             }
+            else {
+                // Treatment B Logik (aktuell gleich wie A)
+                let totalConditions = random_int();
+                let codeLines = [];
 
-            t.expected_answer = "" + totalConditions;
+                let x = (totalConditions * 3 + random_int()) % 10;
+                let y = (totalConditions + random_int() * 2) % 10;
+
+                codeLines.push("public class Example {");
+                codeLines.push("    public static void main(String[] args) {");
+                codeLines.push(`        int x = ${x};`);
+                codeLines.push(`        int y = ${y};`);
+                codeLines.push("        int z = x + y;");
+
+                for (let i = 0; i < totalConditions; i++) {
+                    let rnd = random_int();
+                    if (rnd < 3) {
+                        codeLines.push("        if (z > 0) {");
+                        codeLines.push("            System.out.println(\"if block\");");
+                        codeLines.push("        }");
+                    } else if (rnd < 6) {
+                        codeLines.push("        else if (z > 1) {");
+                        codeLines.push("            System.out.println(\"else-if block\");");
+                        codeLines.push("        }");
+                    } else {
+                        codeLines.push("        else {");
+                        codeLines.push("            System.out.println(\"else block\");");
+                        codeLines.push("        }");
+                    }
+                }
+
+                codeLines.push("    }");
+                codeLines.push("}");
+
+                t.code = codeLines.join("\n");
+                t.expected_answer = "" + totalConditions;
+            }
 
             t.after_task_string = () => "Enter drücken, um mit der nächsten Frage fortzufahren!";
         }
-
     }
 );
