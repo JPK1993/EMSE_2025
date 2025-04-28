@@ -31,22 +31,22 @@ document.experiment_definition(
         repetitions:4,                    // Anzahl der Wiederholungen pro Treatmentcombination
         accepted_responses:["0", "1","2","3", "4", "5", "6", "7", "8", "9"], // Tasten, die vom Experiment als Eingabe akzeptiert werden
         task_configuration: (t) => {
-            // Same logic for both treatments for now
-            let totalConditions = random_int(); // total number of conditional blocks (0–9)
+            // Die Gleiche Logik für beide Treatments
+            let totalConditions = random_int();
             let codeLines = [];
 
             let x = (totalConditions * 3 + random_int()) % 10;
             let y = (totalConditions + random_int() * 2) % 10;
 
 
-            // Begin Java class and method
+            // Anfang
             codeLines.push("public class Example {");
             codeLines.push("    public static void main(String[] args) {");
             codeLines.push(`        int x = ${x};`);
             codeLines.push(`        int y = ${y};`);
             codeLines.push("        int z = x + y;");
 
-            // Add 'totalConditions' number of if/else if/else statements
+            // Codeschnipsel-Generator
             for (let i = 0; i < totalConditions; i++) {
                 let rnd = random_int();
                 if (rnd < 3) {
@@ -64,18 +64,19 @@ document.experiment_definition(
                 }
             }
 
-            // Close method and class
+            //Ende
+
             codeLines.push("    }");
             codeLines.push("}");
 
-            // Assign the generated code to both treatment types
+            // Den generierten Code beiden Treatments zuweisen
             if (t.treatment_combination[0].value === "A" || t.treatment_combination[0].value === "B") {
                 t.code = codeLines.join("\n");
             }
 
             t.expected_answer = "" + totalConditions;
 
-            t.after_task_string = () => "Some nice text between the tasks";
+            t.after_task_string = () => "Enter drücken, um mit der nächsten Frage fortzufahren!";
         }
 
     }
