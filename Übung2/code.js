@@ -52,6 +52,11 @@ let experiment_configuration_function = (writer) => { return {
             { lines: ["else {", "    System.out.println(\"Negative\");", "}" ], isConditional: true },
             { lines: ["if (x % 2 == 0) {", "    System.out.println(\"Even number\");", "}" ], isConditional: true },
             { lines: ["if (y < 5 && z > 2) {", "    System.out.println(\"Complex condition met\");", "}" ], isConditional: true },
+            { lines: [
+                    '<span style="color:blue;">if</span> (z > 0) {',
+                    '    <span style="color:green;">System.out.println</span>(<span style="color:red;">"Positive"</span>);',
+                    '}'
+                ], isConditional: true },
 
             // Non-conditional
             { lines: ["while (x < 10) {", "    x++;", "}" ], isConditional: false },
