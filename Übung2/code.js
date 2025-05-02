@@ -231,11 +231,13 @@ function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
         '        <span style="color:blue;">int</span> z = x + y;'
     ];
 
-    codeLines.push(...(treatment === "B" ? methodHeaderHighlighted : methodHeader));
+    //codeLines.push(...(treatment === "B" ? methodHeaderHighlighted : methodHeader));
 
-
-
-
+    if (treatment === "A") {
+        codeLines.push(...methodHeader);
+    } else if (treatment === "B") {
+        codeLines.push(...methodHeaderHighlighted);
+    }
 
 
     for (const snippet of chosenSnippets) {
