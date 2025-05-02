@@ -69,12 +69,12 @@ let experiment_configuration_function = (writer) => { return {
             {lines: ["String str = \"  Hello World  \";", "str = str.trim();", "System.out.println(str);"], isConditional: false}
         ];
 
-        // Code generation for Treatment A
+        // Code generieren für Treatment A
         if (treatment === "A") {
             generateCodeSnippet(t, writer, snippetTemplates, treatment);
         }
 
-        // Code generation for Treatment B
+        // Code generieren für Treatment B
         else if (treatment === "B") {
             generateCodeSnippet(t, writer, snippetTemplates, treatment);
         }
@@ -114,7 +114,15 @@ function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
 
     t.do_print_task = () => {
         writer.clear_stage();
-        writer.print_html_on_stage("<div class='sourcecode'>" + writer.convert_string_to_html_string(codeLines.join("\n")) + "</div>");
+        //Formatierung aber kein Highlighting:
+        //writer.print_html_on_stage("<div class='sourcecode'>" + writer.convert_string_to_html_string(codeLines.join("\n")) + "</div>");
+        //Highlighting aber keine Formatierung:
+        //writer.print_html_on_stage("<div class='sourcecode'>" + codeLines.join("\n") + "</div>");
+        //Beides scheint zu funktionieren:
+        writer.print_html_on_stage(
+            "<div class='sourcecode'><pre><code>" + codeLines.join("\n") + "</code></pre></div>"
+        );
+
     };
 
     t.expected_answer = "" + countConditionals;
