@@ -52,22 +52,139 @@ let experiment_configuration_function = (writer) => { return {
             { lines: ["else {", "    System.out.println(\"Negative\");", "}" ], isConditional: true },
             { lines: ["if (x % 2 == 0) {", "    System.out.println(\"Even number\");", "}" ], isConditional: true },
             { lines: ["if (y < 5 && z > 2) {", "    System.out.println(\"Complex condition met\");", "}" ], isConditional: true },
-            { lines: [
-                    '<span style="color:blue;">if</span> (z > 0) {',
-                    '    <span style="color:green;">System.out.println</span>(<span style="color:red;">"Positive"</span>);',
-                    '}'
-                ], isConditional: true },
+            { lines: ["if (z > 0) {", "    System.out.println(\"Positive\");", "}"], isConditional: true},
 
-            // Non-conditional
+            // Non-Conditional
             { lines: ["while (x < 10) {", "    x++;", "}" ], isConditional: false },
             { lines: ["// This is a debug comment", "System.out.println(\"Debugging...\");", "// End of debug" ], isConditional: false },
             { lines: ["int result = x + y;", "System.out.println(\"Result: \" + result);", "// Calculation done" ], isConditional: false },
             { lines: ["for (int i = 0; i < 3; i++) {", "    System.out.println(i);", "}" ], isConditional: false },
             { lines: ["String name = \"Test\";", "System.out.println(\"Hello, \" + name);", "// Greeting complete" ], isConditional: false },
             { lines: ["// Log current time", "System.out.println(System.currentTimeMillis());", "// End time log" ], isConditional: false },
-            {lines: ["int[] arr = {1, 2, 3, 4, 5};", "arr[0] = 10;", "System.out.println(arr[0]);"], isConditional: false},
-            {lines: ["String str = \"  Hello World  \";", "str = str.trim();", "System.out.println(str);"], isConditional: false}
+            { lines: ["int[] arr = {1, 2, 3, 4, 5};", "arr[0] = 10;", "System.out.println(arr[0]);"], isConditional: false},
+            { lines: ["String str = \"  Hello World  \";", "str = str.trim();", "System.out.println(str);"], isConditional: false}
         ];
+
+        const snippetTemplatesHighlighted = [
+            // Conditional
+            {
+                lines: [
+                    '<span style="color:blue;">if</span> (z &gt; 0) {',
+                    '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Positive"</span>);',
+                    '}'
+                ],
+                isConditional: true
+            },
+            {
+                lines: [
+                    '<span style="color:blue;">else if</span> (z == 0) {',
+                    '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Zero"</span>);',
+                    '}'
+                ],
+                isConditional: true
+            },
+            {
+                lines: [
+                    '<span style="color:blue;">else</span> {',
+                    '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Negative"</span>);',
+                    '}'
+                ],
+                isConditional: true
+            },
+            {
+                lines: [
+                    '<span style="color:blue;">if</span> (x % 2 == 0) {',
+                    '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Even number"</span>);',
+                    '}'
+                ],
+                isConditional: true
+            },
+            {
+                lines: [
+                    '<span style="color:blue;">if</span> (y &lt; 5 &amp;&amp; z &gt; 2) {',
+                    '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Complex condition met"</span>);',
+                    '}'
+                ],
+                isConditional: true
+            },
+            {
+                lines: [
+                    '<span style="color:blue;">if</span> (z &gt; 0) {',
+                    '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Positive"</span>);',
+                    '}'
+                ],
+                isConditional: true
+            },
+
+            // Non-Conditional
+            {
+                lines: [
+                    '<span style="color:blue;">while</span> (x &lt; 10) {',
+                    '    x++;',
+                    '}'
+                ],
+                isConditional: false
+            },
+            {
+                lines: [
+                    '<span style="color:gray;">// This is a debug comment</span>',
+                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Debugging..."</span>);',
+                    '<span style="color:gray;">// End of debug</span>'
+                ],
+                isConditional: false
+            },
+            {
+                lines: [
+                    '<span style="color:blue;">int</span> result = x + y;',
+                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Result: "</span> + result);',
+                    '<span style="color:gray;">// Calculation done</span>'
+                ],
+                isConditional: false
+            },
+            {
+                lines: [
+                    '<span style="color:blue;">for</span> (<span style="color:blue;">int</span> i = 0; i &lt; 3; i++) {',
+                    '    <span style="color:purple;">System</span>.out.println(i);',
+                    '}'
+                ],
+                isConditional: false
+            },
+            {
+                lines: [
+                    '<span style="color:blue;">String</span> name = <span style="color:green;">"Test"</span>;',
+                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Hello, "</span> + name);',
+                    '<span style="color:gray;">// Greeting complete</span>'
+                ],
+                isConditional: false
+            },
+            {
+                lines: [
+                    '<span style="color:gray;">// Log current time</span>',
+                    '<span style="color:purple;">System</span>.out.println(<span style="color:purple;">System</span>.currentTimeMillis());',
+                    '<span style="color:gray;">// End time log</span>'
+                ],
+                isConditional: false
+            },
+            {
+                lines: [
+                    '<span style="color:blue;">int</span>[] arr = {1, 2, 3, 4, 5};',
+                    'arr[0] = 10;',
+                    '<span style="color:purple;">System</span>.out.println(arr[0]);'
+                ],
+                isConditional: false
+            },
+            {
+                lines: [
+                    '<span style="color:blue;">String</span> str = <span style="color:green;">"  Hello World  "</span>;',
+                    'str = str.trim();',
+                    '<span style="color:purple;">System</span>.out.println(str);'
+                ],
+                isConditional: false
+            }
+        ];
+
+
+
 
         // Code generieren für Treatment A
         if (treatment === "A") {
@@ -76,7 +193,7 @@ let experiment_configuration_function = (writer) => { return {
 
         // Code generieren für Treatment B
         else if (treatment === "B") {
-            generateCodeSnippet(t, writer, snippetTemplates, treatment);
+            generateCodeSnippet(t, writer, snippetTemplatesHighlighted, treatment);
         }
     }
 
@@ -97,11 +214,29 @@ function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
     const y = Nof1.new_random_integer(10);
 
     let codeLines = [];
-    codeLines.push("public class Example {");
-    codeLines.push("    public static void main(String[] args) {");
-    codeLines.push(`        int x = ${x};`);
-    codeLines.push(`        int y = ${y};`);
-    codeLines.push("        int z = x + y;");
+
+    const methodHeader = [
+        "public class Example {",
+        "    public static void main(String[] args) {",
+        `        int x = ${x};`,
+        `        int y = ${y};`,
+        "        int z = x + y;"
+    ];
+
+    const methodHeaderHighlighted = [
+        '<span style="color:blue;">public class</span> Example {',
+        '    <span style="color:blue;">public static void</span> main(<span style="color:blue;">String</span>[] args) {',
+        `        <span style="color:blue;">int</span> x = ${x};`,
+        `        <span style="color:blue;">int</span> y = ${y};`,
+        '        <span style="color:blue;">int</span> z = x + y;'
+    ];
+
+    codeLines.push(...(treatment === "B" ? methodHeaderHighlighted : methodHeader));
+
+
+
+
+
 
     for (const snippet of chosenSnippets) {
         for (const line of snippet.lines) {
