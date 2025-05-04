@@ -3,7 +3,7 @@ Nof1.SET_SEED(SEED);
 
 let experiment_configuration_function = (writer) => { return {
 
-    experiment_name: "TestExperiment",
+    experiment_name: "Java Syntax-Highlighting",
     seed: SEED,
 
     introduction_pages: writer.stage_string_pages_commands([
@@ -12,11 +12,11 @@ let experiment_configuration_function = (writer) => { return {
     ]),
 
     pre_run_training_instructions: writer.string_page_command(
-        writer.convert_string_to_html_string("You entered the training phase.")
+        writer.convert_string_to_html_string("You entered the training phase.\n\nCount how many \"if\", \"else if\" and \"else\" statements are present in the code. The total number will be between 0 and 9.")
     ),
 
     pre_run_experiment_instructions: writer.string_page_command(
-        writer.convert_string_to_html_string("You entered the experiment phase.\n\nCount how many conditional statements are present in the code.")
+        writer.convert_string_to_html_string("You entered the experiment phase.\n\nCount how many \"if\", \"else if\" and \"else\" statements are present in the code. The total number will be between 0 and 9.")
     ),
 
     finish_pages: [
