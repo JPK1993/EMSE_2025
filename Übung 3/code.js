@@ -26,13 +26,13 @@ let experiment_configuration_function = (writer) => { return {
     ],
 
     layout: [
-        { variable: "AVariable", treatments: ["A", "B"] },
+        { variable: "AVariable", treatments: ["Not Highlighted", "Highlighted"] },
     ],
 
     training_configuration: {
         fixed_treatments: [
-            ["AVariable", "A"],
-            ["AVariable", "B"]
+            ["AVariable", "Not Highlighted"],
+            ["AVariable", "Highlighted"]
         ],
         can_be_cancelled: false,
         can_be_repeated: false
@@ -187,12 +187,12 @@ let experiment_configuration_function = (writer) => { return {
 
 
         // Code generieren für Treatment A
-        if (treatment === "A") {
+        if (treatment === "Not Highlighted") {
             generateCodeSnippet(t, writer, snippetTemplates, treatment);
         }
 
         // Code generieren für Treatment B
-        else if (treatment === "B") {
+        else if (treatment === "Highlighted") {
             generateCodeSnippet(t, writer, snippetTemplatesHighlighted, treatment);
         }
     }
@@ -267,9 +267,9 @@ function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
 
     //codeLines.push(...(treatment === "B" ? methodHeaderHighlighted : methodHeader));
 
-    if (treatment === "A") {
+    if (treatment === "Not Highlighted") {
         codeLines.push(...methodHeader);
-    } else if (treatment === "B") {
+    } else if (treatment === "Highlighted") {
         codeLines.push(...methodHeaderHighlighted);
     }
 
