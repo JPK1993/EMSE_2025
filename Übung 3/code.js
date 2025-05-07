@@ -47,22 +47,22 @@ let experiment_configuration_function = (writer) => { return {
 
         const snippetTemplates = [
             // Conditional
-            { lines: ["if (z > 0) {", "    System.out.println(\"Positive\");", "}" ], isConditional: true },
-            { lines: ["else if (z == 0) {", "    System.out.println(\"Zero\");", "}" ], isConditional: true },
-            { lines: ["else {", "    System.out.println(\"Negative\");", "}" ], isConditional: true },
-            { lines: ["if (x % 2 == 0) {", "    System.out.println(\"Even number\");", "}" ], isConditional: true },
-            { lines: ["if (y < 5 && z > 2) {", "    System.out.println(\"Complex condition met\");", "}" ], isConditional: true },
-            { lines: ["if (z > 0) {", "    System.out.println(\"Positive\");", "}"], isConditional: true},
+            { lines: ["if (z > 0) {", "    System.out.println(\"Positive\");", "}" ], isConditional: true, conditionalType: "if"},
+            { lines: ["else if (z == 0) {", "    System.out.println(\"Zero\");", "}" ], isConditional: true, conditionalType: "else if"},
+            { lines: ["else {", "    System.out.println(\"Negative\");", "}" ], isConditional: true, conditionalType: "else"},
+            { lines: ["if (x % 2 == 0) {", "    System.out.println(\"Even number\");", "}" ], isConditional: true, conditionalType: "if"},
+            { lines: ["if (y < 5 && z > 2) {", "    System.out.println(\"Complex condition met\");", "}" ], isConditional: true, conditionalType: "if"},
+            { lines: ["if (z > 0) {", "    System.out.println(\"Positive\");", "}"], isConditional: true, conditionalType: "if"},
 
             // Non-Conditional
-            { lines: ["while (x < 10) {", "    x++;", "}" ], isConditional: false },
-            { lines: ["// This is a debug comment", "System.out.println(\"Debugging...\");", "// End of debug" ], isConditional: false },
-            { lines: ["int result = x + y;", "System.out.println(\"Result: \" + result);", "// Calculation done" ], isConditional: false },
-            { lines: ["for (int i = 0; i < 3; i++) {", "    System.out.println(i);", "}" ], isConditional: false },
-            { lines: ["String name = \"Test\";", "System.out.println(\"Hello, \" + name);", "// Greeting complete" ], isConditional: false },
-            { lines: ["// Log current time", "System.out.println(System.currentTimeMillis());", "// End time log" ], isConditional: false },
-            { lines: ["int[] arr = {1, 2, 3, 4, 5};", "arr[0] = 10;", "System.out.println(arr[0]);"], isConditional: false},
-            { lines: ["String str = \"  Hello World  \";", "str = str.trim();", "System.out.println(str);"], isConditional: false}
+            { lines: ["while (x < 10) {", "    x++;", "}" ], isConditional: false, conditionalType: null },
+            { lines: ["// This is a debug comment", "System.out.println(\"Debugging...\");", "// End of debug" ], isConditional: false, conditionalType: null},
+            { lines: ["int result = x + y;", "System.out.println(\"Result: \" + result);", "// Calculation done" ], isConditional: false, conditionalType: null},
+            { lines: ["for (int i = 0; i < 3; i++) {", "    System.out.println(i);", "}" ], isConditional: false, conditionalType: null},
+            { lines: ["String name = \"Test\";", "System.out.println(\"Hello, \" + name);", "// Greeting complete" ], isConditional: false, conditionalType: null},
+            { lines: ["// Log current time", "System.out.println(System.currentTimeMillis());", "// End time log" ], isConditional: false, conditionalType: null},
+            { lines: ["int[] arr = {1, 2, 3, 4, 5};", "arr[0] = 10;", "System.out.println(arr[0]);"], isConditional: false, conditionalType: null},
+            { lines: ["String str = \"  Hello World  \";", "str = str.trim();", "System.out.println(str);"], isConditional: false, conditionalType: null}
         ];
 
         const snippetTemplatesHighlighted = [
@@ -73,7 +73,7 @@ let experiment_configuration_function = (writer) => { return {
                     '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Positive"</span>);',
                     '}'
                 ],
-                isConditional: true
+                isConditional: true, conditionalType: "if"
             },
             {
                 lines: [
@@ -81,7 +81,7 @@ let experiment_configuration_function = (writer) => { return {
                     '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Zero"</span>);',
                     '}'
                 ],
-                isConditional: true
+                isConditional: true, conditionalType: "else if"
             },
             {
                 lines: [
@@ -89,7 +89,7 @@ let experiment_configuration_function = (writer) => { return {
                     '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Negative"</span>);',
                     '}'
                 ],
-                isConditional: true
+                isConditional: true, conditionalType: "else"
             },
             {
                 lines: [
@@ -97,7 +97,7 @@ let experiment_configuration_function = (writer) => { return {
                     '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Even number"</span>);',
                     '}'
                 ],
-                isConditional: true
+                isConditional: true, conditionalType: "if"
             },
             {
                 lines: [
@@ -105,7 +105,7 @@ let experiment_configuration_function = (writer) => { return {
                     '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Complex condition met"</span>);',
                     '}'
                 ],
-                isConditional: true
+                isConditional: true, conditionalType: "if"
             },
             {
                 lines: [
@@ -113,7 +113,7 @@ let experiment_configuration_function = (writer) => { return {
                     '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Positive"</span>);',
                     '}'
                 ],
-                isConditional: true
+                isConditional: true, conditionalType: "if"
             },
 
             // Non-Conditional
@@ -123,7 +123,7 @@ let experiment_configuration_function = (writer) => { return {
                     '    x++;',
                     '}'
                 ],
-                isConditional: false
+                isConditional: false, conditionalType: null
             },
             {
                 lines: [
@@ -131,7 +131,7 @@ let experiment_configuration_function = (writer) => { return {
                     '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Debugging..."</span>);',
                     '<span style="color:gray;">// End of debug</span>'
                 ],
-                isConditional: false
+                isConditional: false, conditionalType: null
             },
             {
                 lines: [
@@ -139,7 +139,7 @@ let experiment_configuration_function = (writer) => { return {
                     '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Result: "</span> + result);',
                     '<span style="color:gray;">// Calculation done</span>'
                 ],
-                isConditional: false
+                isConditional: false, conditionalType: null
             },
             {
                 lines: [
@@ -147,7 +147,7 @@ let experiment_configuration_function = (writer) => { return {
                     '    <span style="color:purple;">System</span>.out.println(i);',
                     '}'
                 ],
-                isConditional: false
+                isConditional: false, conditionalType: null
             },
             {
                 lines: [
@@ -155,7 +155,7 @@ let experiment_configuration_function = (writer) => { return {
                     '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Hello, "</span> + name);',
                     '<span style="color:gray;">// Greeting complete</span>'
                 ],
-                isConditional: false
+                isConditional: false, conditionalType: null
             },
             {
                 lines: [
@@ -163,7 +163,7 @@ let experiment_configuration_function = (writer) => { return {
                     '<span style="color:purple;">System</span>.out.println(<span style="color:purple;">System</span>.currentTimeMillis());',
                     '<span style="color:gray;">// End time log</span>'
                 ],
-                isConditional: false
+                isConditional: false, conditionalType: null
             },
             {
                 lines: [
@@ -171,7 +171,7 @@ let experiment_configuration_function = (writer) => { return {
                     'arr[0] = 10;',
                     '<span style="color:purple;">System</span>.out.println(arr[0]);'
                 ],
-                isConditional: false
+                isConditional: false, conditionalType: null
             },
             {
                 lines: [
@@ -179,7 +179,7 @@ let experiment_configuration_function = (writer) => { return {
                     'str = str.trim();',
                     '<span style="color:purple;">System</span>.out.println(str);'
                 ],
-                isConditional: false
+                isConditional: false, conditionalType: null
             }
         ];
 
@@ -200,15 +200,49 @@ let experiment_configuration_function = (writer) => { return {
 }};
 
 function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
-    const totalStatements = 9;
+    const totalStatements = 4;
     const chosenSnippets = [];
     let countConditionals = 0;
+    let lastConditionalType = null;
+
+//    for (let i = 0; i < totalStatements; i++) {
+//        let snippet = snippetTemplates[Nof1.new_random_integer(snippetTemplates.length)];
+//        chosenSnippets.push(snippet);
+//        if (snippet.isConditional) countConditionals++;
+//    }
+
 
     for (let i = 0; i < totalStatements; i++) {
-        let snippet = snippetTemplates[Nof1.new_random_integer(snippetTemplates.length)];
+        let allowedTypes;
+
+        switch (lastConditionalType) {
+            case null:
+            case "else":
+                allowedTypes = ["if", null]; // Start new chain or non-conditional
+                break;
+            case "if":
+                allowedTypes = ["else if", "else", "if", null]; // Continue or branch
+                break;
+            case "else if":
+                allowedTypes = ["else", "if", null]; // End branch or start new
+                break;
+        }
+
+        const candidates = snippetTemplates.filter(s =>
+            allowedTypes.includes(s.conditionalType)
+        );
+
+        const snippet = candidates[Nof1.new_random_integer(candidates.length)];
         chosenSnippets.push(snippet);
-        if (snippet.isConditional) countConditionals++;
+
+        if (snippet.isConditional) {
+            countConditionals++;
+            lastConditionalType = snippet.conditionalType;
+        } else {
+            lastConditionalType = null;
+        }
     }
+
 
     const x = Nof1.new_random_integer(10);
     const y = Nof1.new_random_integer(10);
@@ -251,11 +285,7 @@ function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
 
     t.do_print_task = () => {
         writer.clear_stage();
-        //Formatierung aber kein Highlighting:
-        //writer.print_html_on_stage("<div class='sourcecode'>" + writer.convert_string_to_html_string(codeLines.join("\n")) + "</div>");
-        //Highlighting aber keine Formatierung:
-        //writer.print_html_on_stage("<div class='sourcecode'>" + codeLines.join("\n") + "</div>");
-        //Beides scheint zu funktionieren:
+
         writer.print_html_on_stage(
             "<div class='sourcecode'><pre><code>" + codeLines.join("\n") + "</code></pre></div>"
         );
