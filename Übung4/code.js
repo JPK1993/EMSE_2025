@@ -41,7 +41,6 @@ let experiment_configuration_function = (writer) => { return {
     measurement: Nof1.Reaction_time(Nof1.keys(["0","1","2","3","4","5","6","7","8","9"])),
 
     task_configuration: (t) => {
-        let treatment = t.treatment_combination[0].value;
 
         //Unformatiert:
         const snippetTemplatesNothing = [
@@ -325,12 +324,12 @@ let experiment_configuration_function = (writer) => { return {
         ];
 
 
-
+        //Abfrage der Treatment-Kombination:
         let test0 = t.treatment_combination[0].value;
         let test1 = t.treatment_combination[1].value;
 
 
-
+        //Aufruf des Code-Generators je nach Treatment-Zusammensetzung:
         if (test0 === "None" && test1 === "Standard") {
             generateCodeSnippet(t, writer, snippetTemplatesNothing, test0, test1);
         }
@@ -477,7 +476,6 @@ function generateCodeSnippet(t, writer, snippetTemplates, test0, test1) {
         writer.print_html_on_stage(
             "<div class='sourcecode'><pre><code>" + codeLines.join("\n") + "</code></pre></div>"
         );
-
     };
 
     t.expected_answer = "" + countConditionals;
