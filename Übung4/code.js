@@ -26,13 +26,17 @@ let experiment_configuration_function = (writer) => { return {
     ],
 
     layout: [
-        { variable: "AVariable", treatments: ["Not Highlighted", "Highlighted"] },
+        { variable: "AVariable", treatments: ["Nothing", "Highlighted","Indented","Highlighted, Indented"] },
     ],
 
     training_configuration: {
         fixed_treatments: [
-            ["AVariable", "Not Highlighted"],
-            ["AVariable", "Highlighted"]
+            ["AVariable", "Nothing"],
+            ["AVariable", "Highlighted"],
+            ["AVariable", "Indented"],
+            ["AVariable", "Highlighted, Indented"]
+
+
         ],
         can_be_cancelled: false,
         can_be_repeated: false
@@ -45,7 +49,7 @@ let experiment_configuration_function = (writer) => { return {
     task_configuration: (t) => {
         let treatment = t.treatment_combination[0].value;
 
-/*        const snippetTemplates = [
+        const snippetTemplatesIndented = [
             // Conditional
             { lines: ["if (z > 0) {", "    System.out.println(\"Positive\");", "}" ], isConditional: true, conditionalType: "if"},
             { lines: ["else if (z == 0) {", "    System.out.println(\"Zero\");", "}" ], isConditional: true, conditionalType: "else if"},
@@ -63,9 +67,9 @@ let experiment_configuration_function = (writer) => { return {
             { lines: ["// Log current time", "System.out.println(System.currentTimeMillis());", "// End time log" ], isConditional: false, conditionalType: null},
             { lines: ["int[] arr = {1, 2, 3, 4, 5};", "arr[0] = 10;", "System.out.println(arr[0]);"], isConditional: false, conditionalType: null},
             { lines: ["String str = \"  Hello World  \";", "str = str.trim();", "System.out.println(str);"], isConditional: false, conditionalType: null}
-        ];*/
+        ];
 
-                const snippetTemplatesNoIndentation = [
+        const snippetTemplatesNothing = [
             // Conditional
             { lines: ["if (z > 0) {", "System.out.println(\"Positive\");", "}" ], isConditional: true, conditionalType: "if"},
             { lines: ["else if (z == 0) {", "System.out.println(\"Zero\");", "}" ], isConditional: true, conditionalType: "else if"},
@@ -85,7 +89,7 @@ let experiment_configuration_function = (writer) => { return {
             { lines: ["String str = \"  Hello World  \";", "str = str.trim();", "System.out.println(str);"], isConditional: false, conditionalType: null}
         ];
 
-       /* const snippetTemplatesHighlighted = [
+        const snippetTemplatesHighlightedIndented = [
             // Conditional
             {
                 lines: [
@@ -202,10 +206,10 @@ let experiment_configuration_function = (writer) => { return {
                 isConditional: false, conditionalType: null
             }
         ];
-*/
 
 
-         const snippetTemplatesNoIndentationHighlighted = [
+
+         const snippetTemplatesHighlighted = [
      // Conditional
      {
          lines: [
@@ -325,14 +329,20 @@ let experiment_configuration_function = (writer) => { return {
 
 
 
-        // Code generieren für Treatment A
-        if (treatment === "Not Highlighted") {
-            generateCodeSnippet(t, writer, snippetTemplatesNoIndentation, treatment);
+        if (treatment === "Nothing") {
+            generateCodeSnippet(t, writer, snippetTemplatesNothing, treatment);
         }
 
-        // Code generieren für Treatment B
         else if (treatment === "Highlighted") {
-            generateCodeSnippet(t, writer, snippetTemplatesNoIndentationHighlighted, treatment);
+            generateCodeSnippet(t, writer, snippetTemplatesHighlighted, treatment);
+        }
+
+        else if (treatment === "Indented") {
+            generateCodeSnippet(t, writer, snippetTemplatesIndented, treatment);
+        }
+
+        else if (treatment === "Highlighted, Indented") {
+            generateCodeSnippet(t, writer, snippetTemplatesHighlightedIndented, treatment);
         }
     }
 
@@ -343,12 +353,6 @@ function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
     const chosenSnippets = [];
     let countConditionals = 0;
     let lastConditionalType = null;
-
-//    for (let i = 0; i < totalStatements; i++) {
-//        let snippet = snippetTemplates[Nof1.new_random_integer(snippetTemplates.length)];
-//        chosenSnippets.push(snippet);
-//        if (snippet.isConditional) countConditionals++;
-//    }
 
 
     for (let i = 0; i < totalStatements; i++) {
@@ -388,15 +392,7 @@ function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
 
     let codeLines = [];
 
-/*    const methodHeader = [
-        "public class Example {",
-        "    public static void main(String[] args) {",
-        `        int x = ${x};`,
-        `        int y = ${y};`,
-        "        int z = x + y;"
-    ];*/
-
-    const methodHeader = [
+    const methodHeader1 = [
         "public class Example {",
         "public static void main(String[] args) {",
         `int x = ${x};`,
@@ -404,15 +400,15 @@ function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
         "int z = x + y;"
     ];
 
-/*    const methodHeaderHighlighted = [
-        '<span style="color:blue;">public class</span> Example {',
-        '    <span style="color:blue;">public static void</span> main(<span style="color:blue;">String</span>[] args) {',
-        `        <span style="color:blue;">int</span> x = ${x};`,
-        `        <span style="color:blue;">int</span> y = ${y};`,
-        '        <span style="color:blue;">int</span> z = x + y;'
-    ];*/
+    const methodHeader2 = [
+        "public class Example {",
+        "    public static void main(String[] args) {",
+        `        int x = ${x};`,
+        `        int y = ${y};`,
+        "        int z = x + y;"
+    ];
 
-    const methodHeaderHighlighted = [
+    const methodHeader3 = [
         '<span style="color:blue;">public class</span> Example {',
         '<span style="color:blue;">public static void</span> main(<span style="color:blue;">String</span>[] args) {',
         `<span style="color:blue;">int</span> x = ${x};`,
@@ -420,27 +416,59 @@ function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
         '<span style="color:blue;">int</span> z = x + y;'
     ];
 
-    if (treatment === "Not Highlighted") {
-        codeLines.push(...methodHeader);
+
+    const methodHeader4 = [
+        '<span style="color:blue;">public class</span> Example {',
+        '    <span style="color:blue;">public static void</span> main(<span style="color:blue;">String</span>[] args) {',
+        `        <span style="color:blue;">int</span> x = ${x};`,
+        `        <span style="color:blue;">int</span> y = ${y};`,
+        '        <span style="color:blue;">int</span> z = x + y;'
+    ];
+
+
+
+    if (treatment === "Nothing") {
+        codeLines.push(...methodHeader1);
+        for (const snippet of chosenSnippets) {
+            for (const line of snippet.lines) {
+                codeLines.push("" + line);
+            }
+        }
+        codeLines.push("}");
+        codeLines.push("}");
+
     } else if (treatment === "Highlighted") {
-        codeLines.push(...methodHeaderHighlighted);
+        codeLines.push(...methodHeader3);
+        for (const snippet of chosenSnippets) {
+            for (const line of snippet.lines) {
+                codeLines.push("" + line);
+            }
+        }
+        codeLines.push("}");
+        codeLines.push("}");
+
+    } else if (treatment === "Indented") {
+        codeLines.push(...methodHeader2);
+        for (const snippet of chosenSnippets) {
+            for (const line of snippet.lines) {
+                codeLines.push("        " + line);
+            }
+        }
+        codeLines.push("    }");
+        codeLines.push("}");
+
+    } else if (treatment === "Highlighted, Indented") {
+        codeLines.push(...methodHeader4);
+        for (const snippet of chosenSnippets) {
+            for (const line of snippet.lines) {
+                codeLines.push("        " + line);
+            }
+        }
+        codeLines.push("    }");
+        codeLines.push("}");
+
     }
 
-
-/*    for (const snippet of chosenSnippets) {
-        for (const line of snippet.lines) {
-            codeLines.push("        " + line);
-        }
-    }*/
-
-    for (const snippet of chosenSnippets) {
-        for (const line of snippet.lines) {
-            codeLines.push("" + line);
-        }
-    }
-
-    codeLines.push("    }");
-    codeLines.push("}");
 
     t.do_print_task = () => {
         writer.clear_stage();
