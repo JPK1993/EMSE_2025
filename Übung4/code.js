@@ -31,15 +31,7 @@ let experiment_configuration_function = (writer) => { return {
     ],
 
     training_configuration: {
-        fixed_treatments: [
- /*           ["AVariable", "Nothing"],
-            ["AVariable", "Highlighted"],
-            ["AVariable", "Indented"],
-            ["AVariable", "Highlighted, Indented"]*/
-
-
-        ],
-
+        fixed_treatments: [],
         can_be_cancelled: false,
         can_be_repeated: false
     },
