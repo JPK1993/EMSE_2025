@@ -12,11 +12,11 @@ let experiment_configuration_function = (writer) => { return {
     ]),
 
     pre_run_training_instructions: writer.string_page_command(
-        writer.convert_string_to_html_string("You entered the training phase.\n\nCount how many \"if\", \"else if\" and \"else\" statements are present in the code. The total number will be between 0 and 9.")
+        writer.convert_string_to_html_string("You entered the training phase.\n\nCount how many \"if\", \"else if\" and \"else\" statements are present in the code. The total number will be between 0 and 4.")
     ),
 
     pre_run_experiment_instructions: writer.string_page_command(
-        writer.convert_string_to_html_string("You entered the experiment phase.\n\nCount how many \"if\", \"else if\" and \"else\" statements are present in the code. The total number will be between 0 and 9.")
+        writer.convert_string_to_html_string("You entered the experiment phase.\n\nCount how many \"if\", \"else if\" and \"else\" statements are present in the code. The total number will be between 0 and 4.")
     ),
 
     finish_pages: [
