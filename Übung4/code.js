@@ -26,18 +26,20 @@ let experiment_configuration_function = (writer) => { return {
     ],
 
     layout: [
-        { variable: "AVariable", treatments: ["Nothing", "Highlighted","Indented","Highlighted, Indented"] },
+        { variable: "Highlighting", treatments: ["None", "Highlighted"] },
+        { variable: "Indentation", treatments: ["Standard", "Indented"] },
     ],
 
     training_configuration: {
         fixed_treatments: [
-            ["AVariable", "Nothing"],
+ /*           ["AVariable", "Nothing"],
             ["AVariable", "Highlighted"],
             ["AVariable", "Indented"],
-            ["AVariable", "Highlighted, Indented"]
+            ["AVariable", "Highlighted, Indented"]*/
 
 
         ],
+
         can_be_cancelled: false,
         can_be_repeated: false
     },
@@ -328,27 +330,31 @@ let experiment_configuration_function = (writer) => { return {
  ];
 
 
+        let test0 = t.treatment_combination[0].value;
+        let test1 = t.treatment_combination[1].value;
 
-        if (treatment === "Nothing") {
-            generateCodeSnippet(t, writer, snippetTemplatesNothing, treatment);
+
+
+        if (test0 === "None" && test1 === "Standard") {
+            generateCodeSnippet(t, writer, snippetTemplatesNothing, test0, test1);
         }
 
-        else if (treatment === "Highlighted") {
-            generateCodeSnippet(t, writer, snippetTemplatesHighlighted, treatment);
+        else if (test0 === "Highlighted" && test1 === "Standard") {
+            generateCodeSnippet(t, writer, snippetTemplatesHighlighted, test0, test1);
         }
 
-        else if (treatment === "Indented") {
-            generateCodeSnippet(t, writer, snippetTemplatesIndented, treatment);
+        else if (test0 === "None" && test1 === "Indented") {
+            generateCodeSnippet(t, writer, snippetTemplatesIndented, test0, test1);
         }
 
-        else if (treatment === "Highlighted, Indented") {
-            generateCodeSnippet(t, writer, snippetTemplatesHighlightedIndented, treatment);
+        else if (test0 === "Highlighted" && test1 === "Indented") {
+            generateCodeSnippet(t, writer, snippetTemplatesHighlightedIndented, test0, test1);
         }
     }
 
 }};
 
-function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
+function generateCodeSnippet(t, writer, snippetTemplates, test0, test1) {
     const totalStatements = 4;
     const chosenSnippets = [];
     let countConditionals = 0;
@@ -426,8 +432,7 @@ function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
     ];
 
 
-
-    if (treatment === "Nothing") {
+    if (test0 === "None" && test1 === "Standard") {
         codeLines.push(...methodHeader1);
         for (const snippet of chosenSnippets) {
             for (const line of snippet.lines) {
@@ -437,7 +442,7 @@ function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
         codeLines.push("}");
         codeLines.push("}");
 
-    } else if (treatment === "Highlighted") {
+    } else if (test0 === "Highlighted" && test1 === "Standard") {
         codeLines.push(...methodHeader3);
         for (const snippet of chosenSnippets) {
             for (const line of snippet.lines) {
@@ -447,7 +452,7 @@ function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
         codeLines.push("}");
         codeLines.push("}");
 
-    } else if (treatment === "Indented") {
+    } else if (test0 === "None" && test1 === "Indented") {
         codeLines.push(...methodHeader2);
         for (const snippet of chosenSnippets) {
             for (const line of snippet.lines) {
@@ -457,7 +462,7 @@ function generateCodeSnippet(t, writer, snippetTemplates, treatment) {
         codeLines.push("    }");
         codeLines.push("}");
 
-    } else if (treatment === "Highlighted, Indented") {
+    } else if (test0 === "Highlighted" && test1 === "Indented") {
         codeLines.push(...methodHeader4);
         for (const snippet of chosenSnippets) {
             for (const line of snippet.lines) {
