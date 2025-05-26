@@ -36,7 +36,7 @@ let experiment_configuration_function = (writer) => { return {
         can_be_repeated: false
     },
 
-    repetitions: 60,
+    repetitions: 20,
 
     measurement: Nof1.Reaction_time(Nof1.keys(["0","1","2","3","4","5","6","7","8","9"])),
 
