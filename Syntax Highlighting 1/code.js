@@ -12,11 +12,11 @@ let experiment_configuration_function = (writer) => { return {
     ]),
 
     pre_run_training_instructions: writer.string_page_command(
-        writer.convert_string_to_html_string("You entered the training phase.\n\nCount how many \"if\", \"else if\" and \"else\" statements are present in the code. The total number will be between 0 and 4.")
+        writer.convert_string_to_html_string("You entered the training phase.\n\nCount how many \"if\", \"else if\" and \"else\" statements are present in the code. The total number will be between 0 and 9.")
     ),
 
     pre_run_experiment_instructions: writer.string_page_command(
-        writer.convert_string_to_html_string("You entered the experiment phase.\n\nCount how many \"if\", \"else if\" and \"else\" statements are present in the code. The total number will be between 0 and 4.")
+        writer.convert_string_to_html_string("You entered the experiment phase.\n\nCount how many \"if\", \"else if\" and \"else\" statements are present in the code. The total number will be between 0 and 9.")
     ),
 
     finish_pages: [
@@ -26,8 +26,7 @@ let experiment_configuration_function = (writer) => { return {
     ],
 
     layout: [
-        { variable: "Highlighting", treatments: ["None", "Highlighted"] },
-        { variable: "Indentation", treatments: ["Standard", "Indented"] },
+        { variable: "Highlighting", treatments: ["No", "Yes"] },
     ],
 
     training_configuration: {
@@ -36,449 +35,155 @@ let experiment_configuration_function = (writer) => { return {
         can_be_repeated: false
     },
 
-    repetitions: 60,
+    repetitions: 20,
 
     measurement: Nof1.Reaction_time(Nof1.keys(["0","1","2","3","4","5","6","7","8","9"])),
 
     task_configuration: (t) => {
+        let treatment = t.treatment_combination[0].value;
 
-        //Unformatiert:
-        const snippetTemplatesNothing = [
-            // Conditional
-            { lines: ["if (z > 0) {", "System.out.println(\"Positive\");", "}" ], isConditional: true, conditionalType: "if"},
-            { lines: ["else if (z == 0) {", "System.out.println(\"Zero\");", "}" ], isConditional: true, conditionalType: "else if"},
-            { lines: ["else {", "System.out.println(\"Negative\");", "}" ], isConditional: true, conditionalType: "else"},
-            { lines: ["if (x % 2 == 0) {", "System.out.println(\"Even number\");", "}" ], isConditional: true, conditionalType: "if"},
-            { lines: ["if (y < 5 && z > 2) {", "System.out.println(\"Complex condition met\");", "}" ], isConditional: true, conditionalType: "if"},
-            { lines: ["if (z > 0) {", "System.out.println(\"Positive\");", "}"], isConditional: true, conditionalType: "if"},
+        const snippetTemplates = [
 
-            // Non-Conditional
-            { lines: ["while (x < 10) {","x++;", "}" ], isConditional: false, conditionalType: null },
-            { lines: ["// This is a debug comment", "System.out.println(\"Debugging...\");", "// End of debug" ], isConditional: false, conditionalType: null},
-            { lines: ["int result = x + y;", "System.out.println(\"Result: \" + result);", "// Calculation done" ], isConditional: false, conditionalType: null},
-            { lines: ["for (int i = 0; i < 3; i++) {", "System.out.println(i);", "}" ], isConditional: false, conditionalType: null},
-            { lines: ["String name = \"Test\";", "System.out.println(\"Hello, \" + name);", "// Greeting complete" ], isConditional: false, conditionalType: null},
-            { lines: ["// Log current time", "System.out.println(System.currentTimeMillis());", "// End time log" ], isConditional: false, conditionalType: null},
-            { lines: ["int[] arr = {1, 2, 3, 4, 5};", "arr[0] = 10;", "System.out.println(arr[0]);"], isConditional: false, conditionalType: null},
-            { lines: ["String str = \"  Hello World  \";", "str = str.trim();", "System.out.println(str);"], isConditional: false, conditionalType: null}
+            { fragment: '"if (x > 0) \\"then\\""', literalCount: 1 },
+            { fragment: '"else if (x == 0)"', literalCount: 1 },
+            { fragment: '"else { \\"fallback\\" }"', literalCount: 1 },
+            { fragment: '"while (flag) { \\"loop\\" }"', literalCount: 1 },
+            { fragment: '"condition?" + "\\"true\\"" + "\\"false\\""', literalCount: 3 },
+            { fragment: '"x < 10 && y > 5"', literalCount: 1 },
+            { fragment: '"switch (val) { case 1: break; }"', literalCount: 1 },
+            { fragment: '"if (" + varName + ")"', literalCount: 1 }, // only one literal: "if ("
+            { fragment: '"} else if (" + input + ".equals(\\"exit\\")) {"', literalCount: 2 },
+
+            { fragment: '"The result is: "', literalCount: 1 },
+            { fragment: '"Value: " + "\\"42\\""', literalCount: 2 },
+            { fragment: '"name" + "\\" \\"" + "surname"', literalCount: 3 },
+            { fragment: '"System.out.println(" + "\\"Hello\\" + ")"', literalCount: 3 },
+            { fragment: '"+" + "\\"sum\\"" + "+"', literalCount: 3 },
+            { fragment: '"\\"Quoted\\"" + " text inside"', literalCount: 2 },
+            { fragment: '"Escape this: " + "\\"\\\\\\"" ', literalCount: 2 },
+            { fragment: '"[DEBUG] Output: "', literalCount: 1 },
+            { fragment: '"Hello, " + "\\"world\\"!"', literalCount: 2 },
+            { fragment: '"Total = " + total', literalCount: 1 },
+            { fragment: '"--End of Line--"', literalCount: 1 }
         ];
 
-        //Eingerückt:
-        const snippetTemplatesIndented = [
-            // Conditional
-            { lines: ["if (z > 0) {", "    System.out.println(\"Positive\");", "}" ], isConditional: true, conditionalType: "if"},
-            { lines: ["else if (z == 0) {", "    System.out.println(\"Zero\");", "}" ], isConditional: true, conditionalType: "else if"},
-            { lines: ["else {", "    System.out.println(\"Negative\");", "}" ], isConditional: true, conditionalType: "else"},
-            { lines: ["if (x % 2 == 0) {", "    System.out.println(\"Even number\");", "}" ], isConditional: true, conditionalType: "if"},
-            { lines: ["if (y < 5 && z > 2) {", "    System.out.println(\"Complex condition met\");", "}" ], isConditional: true, conditionalType: "if"},
-            { lines: ["if (z > 0) {", "    System.out.println(\"Positive\");", "}"], isConditional: true, conditionalType: "if"},
 
-            // Non-Conditional
-            { lines: ["while (x < 10) {", "    x++;", "}" ], isConditional: false, conditionalType: null },
-            { lines: ["// This is a debug comment", "System.out.println(\"Debugging...\");", "// End of debug" ], isConditional: false, conditionalType: null},
-            { lines: ["int result = x + y;", "System.out.println(\"Result: \" + result);", "// Calculation done" ], isConditional: false, conditionalType: null},
-            { lines: ["for (int i = 0; i < 3; i++) {", "    System.out.println(i);", "}" ], isConditional: false, conditionalType: null},
-            { lines: ["String name = \"Test\";", "System.out.println(\"Hello, \" + name);", "// Greeting complete" ], isConditional: false, conditionalType: null},
-            { lines: ["// Log current time", "System.out.println(System.currentTimeMillis());", "// End time log" ], isConditional: false, conditionalType: null},
-            { lines: ["int[] arr = {1, 2, 3, 4, 5};", "arr[0] = 10;", "System.out.println(arr[0]);"], isConditional: false, conditionalType: null},
-            { lines: ["String str = \"  Hello World  \";", "str = str.trim();", "System.out.println(str);"], isConditional: false, conditionalType: null}
-        ];
-
-        //Highlighting:
         const snippetTemplatesHighlighted = [
-            // Conditional
-            {
-                lines: [
-                    '<span style="color:blue;">if</span> (z &gt; 0) {',
-                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Positive"</span>);',
-                    '}'
-                ],
-                isConditional: true, conditionalType: "if"
+            { fragment: '<span style="background-color:red;color:white;">"if (x > 0) \\"then\\""</span>', literalCount: 1 },
+            { fragment: '<span style="background-color:red;color:white;">"else if (x == 0)"</span>', literalCount: 1 },
+            { fragment: '<span style="background-color:red;color:white;">"else { \\"fallback\\" }"</span>', literalCount: 1 },
+            { fragment: '<span style="background-color:red;color:white;">"while (flag) { \\"loop\\" }"</span>', literalCount: 1 },
+            { fragment:
+                    '<span style="background-color:red;color:white;">"condition?"</span> + ' +
+                    '<span style="background-color:red;color:white;">"\\"true\\""</span> + ' +
+                    '<span style="background-color:red;color:white;">"\\"false\\""</span>',
+                literalCount: 3
             },
-            {
-                lines: [
-                    '<span style="color:blue;">else if</span> (z == 0) {',
-                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Zero"</span>);',
-                    '}'
-                ],
-                isConditional: true, conditionalType: "else if"
-            },
-            {
-                lines: [
-                    '<span style="color:blue;">else</span> {',
-                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Negative"</span>);',
-                    '}'
-                ],
-                isConditional: true, conditionalType: "else"
-            },
-            {
-                lines: [
-                    '<span style="color:blue;">if</span> (x % 2 == 0) {',
-                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Even number"</span>);',
-                    '}'
-                ],
-                isConditional: true, conditionalType: "if"
-            },
-            {
-                lines: [
-                    '<span style="color:blue;">if</span> (y &lt; 5 &amp;&amp; z &gt; 2) {',
-                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Complex condition met"</span>);',
-                    '}'
-                ],
-                isConditional: true, conditionalType: "if"
-            },
-            {
-                lines: [
-                    '<span style="color:blue;">if</span> (z &gt; 0) {',
-                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Positive"</span>);',
-                    '}'
-                ],
-                isConditional: true, conditionalType: "if"
+            { fragment: '<span style="background-color:red;color:white;">"x < 10 && y > 5"</span>', literalCount: 1 },
+            { fragment: '<span style="background-color:red;color:white;">"switch (val) { case 1: break; }"</span>', literalCount: 1 },
+            { fragment: '<span style="background-color:red;color:white;">"if ("</span> + ' +
+                        'varName +' +
+                    '   <span style="background-color:red;color:white;">")"</span>', literalCount: 2 },
+            { fragment:
+                    '<span style="background-color:red;color:white;">"} else if ("</span> + input + ' +
+                    '<span style="background-color:red;color:white;">".equals(\\"exit\\")) {"</span>',
+                literalCount: 2
             },
 
-            // Non-Conditional
-            {
-                lines: [
-                    '<span style="color:blue;">while</span> (x &lt; 10) {',
-                    'x++;',
-                    '}'
-                ],
-                isConditional: false, conditionalType: null
+            { fragment: '<span style="background-color:red;color:white;">"The result is: "</span>', literalCount: 1 },
+            { fragment:
+                    '<span style="background-color:red;color:white;">"Value: "</span> + ' +
+                    '<span style="background-color:red;color:white;">"\\"42\\""</span>',
+                literalCount: 2
             },
-            {
-                lines: [
-                    '<span style="color:gray;">// This is a debug comment</span>',
-                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Debugging..."</span>);',
-                    '<span style="color:gray;">// End of debug</span>'
-                ],
-                isConditional: false, conditionalType: null
+            { fragment:
+                    '<span style="background-color:red;color:white;">"name"</span> + ' +
+                    '<span style="background-color:red;color:white;">"\\" \\""</span> + ' +
+                    '<span style="background-color:red;color:white;">"surname"</span>',
+                literalCount: 3
             },
-            {
-                lines: [
-                    '<span style="color:blue;">int</span> result = x + y;',
-                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Result: "</span> + result);',
-                    '<span style="color:gray;">// Calculation done</span>'
-                ],
-                isConditional: false, conditionalType: null
+            { fragment:
+                    '<span style="background-color:red;color:white;">"System.out.println("</span> + ' +
+                    '<span style="background-color:red;color:white;">"\\"Hello\\""</span> +' +
+                    '<span style="background-color:red;color:white;">")"</span>',
+                literalCount: 3
             },
-            {
-                lines: [
-                    '<span style="color:blue;">for</span> (<span style="color:blue;">int</span> i = 0; i &lt; 3; i++) {',
-                    '<span style="color:purple;">System</span>.out.println(i);',
-                    '}'
-                ],
-                isConditional: false, conditionalType: null
+            { fragment:
+                    '<span style="background-color:red;color:white;">"+" </span> + ' +
+                    '<span style="background-color:red;color:white;">"\\"sum\\""</span> + ' +
+                    '<span style="background-color:red;color:white;">"+" </span>',
+                literalCount: 3
             },
-            {
-                lines: [
-                    '<span style="color:blue;">String</span> name = <span style="color:green;">"Test"</span>;',
-                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Hello, "</span> + name);',
-                    '<span style="color:gray;">// Greeting complete</span>'
-                ],
-                isConditional: false, conditionalType: null
+            { fragment:
+                    '<span style="background-color:red;color:white;">"\\"Quoted\\""</span> + ' +
+                    '<span style="background-color:red;color:white;">" text inside"</span>',
+                literalCount: 2
             },
-            {
-                lines: [
-                    '<span style="color:gray;">// Log current time</span>',
-                    '<span style="color:purple;">System</span>.out.println(<span style="color:purple;">System</span>.currentTimeMillis());',
-                    '<span style="color:gray;">// End time log</span>'
-                ],
-                isConditional: false, conditionalType: null
+            { fragment:
+                    '<span style="background-color:red;color:white;">"Escape this: "</span> + ' +
+                    '<span style="background-color:red;color:white;">"\\"\\\\\\"" </span>',
+                literalCount: 2
             },
-            {
-                lines: [
-                    '<span style="color:blue;">int</span>[] arr = {1, 2, 3, 4, 5};',
-                    'arr[0] = 10;',
-                    '<span style="color:purple;">System</span>.out.println(arr[0]);'
-                ],
-                isConditional: false, conditionalType: null
+            { fragment: '<span style="background-color:red;color:white;">"[DEBUG] Output: "</span>', literalCount: 1 },
+            { fragment:
+                    '<span style="background-color:red;color:white;">"Hello, "</span> + ' +
+                    '<span style="background-color:red;color:white;">"\\"world\\"!"</span>',
+                literalCount: 2
             },
-            {
-                lines: [
-                    '<span style="color:blue;">String</span> str = <span style="color:green;">"  Hello World  "</span>;',
-                    'str = str.trim();',
-                    '<span style="color:purple;">System</span>.out.println(str);'
-                ],
-                isConditional: false, conditionalType: null
-            }
+            { fragment: '<span style="background-color:red;color:white;">"Total = "</span> + total', literalCount: 1 },
+            { fragment: '<span style="background-color:red;color:white;">"--End of Line--"</span>', literalCount: 1 }
+
         ];
 
 
-        //Highlighting + Eingerückt
-        const snippetTemplatesHighlightedIndented = [
-            // Conditional
-            {
-                lines: [
-                    '<span style="color:blue;">if</span> (z &gt; 0) {',
-                    '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Positive"</span>);',
-                    '}'
-                ],
-                isConditional: true, conditionalType: "if"
-            },
-            {
-                lines: [
-                    '<span style="color:blue;">else if</span> (z == 0) {',
-                    '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Zero"</span>);',
-                    '}'
-                ],
-                isConditional: true, conditionalType: "else if"
-            },
-            {
-                lines: [
-                    '<span style="color:blue;">else</span> {',
-                    '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Negative"</span>);',
-                    '}'
-                ],
-                isConditional: true, conditionalType: "else"
-            },
-            {
-                lines: [
-                    '<span style="color:blue;">if</span> (x % 2 == 0) {',
-                    '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Even number"</span>);',
-                    '}'
-                ],
-                isConditional: true, conditionalType: "if"
-            },
-            {
-                lines: [
-                    '<span style="color:blue;">if</span> (y &lt; 5 &amp;&amp; z &gt; 2) {',
-                    '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Complex condition met"</span>);',
-                    '}'
-                ],
-                isConditional: true, conditionalType: "if"
-            },
-            {
-                lines: [
-                    '<span style="color:blue;">if</span> (z &gt; 0) {',
-                    '    <span style="color:purple;">System</span>.out.println(<span style="color:green;">"Positive"</span>);',
-                    '}'
-                ],
-                isConditional: true, conditionalType: "if"
-            },
-
-            // Non-Conditional
-            {
-                lines: [
-                    '<span style="color:blue;">while</span> (x &lt; 10) {',
-                    '    x++;',
-                    '}'
-                ],
-                isConditional: false, conditionalType: null
-            },
-            {
-                lines: [
-                    '<span style="color:gray;">// This is a debug comment</span>',
-                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Debugging..."</span>);',
-                    '<span style="color:gray;">// End of debug</span>'
-                ],
-                isConditional: false, conditionalType: null
-            },
-            {
-                lines: [
-                    '<span style="color:blue;">int</span> result = x + y;',
-                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Result: "</span> + result);',
-                    '<span style="color:gray;">// Calculation done</span>'
-                ],
-                isConditional: false, conditionalType: null
-            },
-            {
-                lines: [
-                    '<span style="color:blue;">for</span> (<span style="color:blue;">int</span> i = 0; i &lt; 3; i++) {',
-                    '    <span style="color:purple;">System</span>.out.println(i);',
-                    '}'
-                ],
-                isConditional: false, conditionalType: null
-            },
-            {
-                lines: [
-                    '<span style="color:blue;">String</span> name = <span style="color:green;">"Test"</span>;',
-                    '<span style="color:purple;">System</span>.out.println(<span style="color:green;">"Hello, "</span> + name);',
-                    '<span style="color:gray;">// Greeting complete</span>'
-                ],
-                isConditional: false, conditionalType: null
-            },
-            {
-                lines: [
-                    '<span style="color:gray;">// Log current time</span>',
-                    '<span style="color:purple;">System</span>.out.println(<span style="color:purple;">System</span>.currentTimeMillis());',
-                    '<span style="color:gray;">// End time log</span>'
-                ],
-                isConditional: false, conditionalType: null
-            },
-            {
-                lines: [
-                    '<span style="color:blue;">int</span>[] arr = {1, 2, 3, 4, 5};',
-                    'arr[0] = 10;',
-                    '<span style="color:purple;">System</span>.out.println(arr[0]);'
-                ],
-                isConditional: false, conditionalType: null
-            },
-            {
-                lines: [
-                    '<span style="color:blue;">String</span> str = <span style="color:green;">"  Hello World  "</span>;',
-                    'str = str.trim();',
-                    '<span style="color:purple;">System</span>.out.println(str);'
-                ],
-                isConditional: false, conditionalType: null
-            }
-        ];
-
-
-        //Abfrage der Treatment-Kombination:
-        let test0 = t.treatment_combination[0].value;
-        let test1 = t.treatment_combination[1].value;
-
-
-        //Aufruf des Code-Generators je nach Treatment-Zusammensetzung:
-        if (test0 === "None" && test1 === "Standard") {
-            generateCodeSnippet(t, writer, snippetTemplatesNothing, test0, test1);
+        // Code generieren für Treatment A
+        if (treatment === "No") {
+            generateCodeSnippet(t, writer, snippetTemplates, treatment);
         }
 
-        else if (test0 === "Highlighted" && test1 === "Standard") {
-            generateCodeSnippet(t, writer, snippetTemplatesHighlighted, test0, test1);
-        }
-
-        else if (test0 === "None" && test1 === "Indented") {
-            generateCodeSnippet(t, writer, snippetTemplatesIndented, test0, test1);
-        }
-
-        else if (test0 === "Highlighted" && test1 === "Indented") {
-            generateCodeSnippet(t, writer, snippetTemplatesHighlightedIndented, test0, test1);
+        // Code generieren für Treatment B
+        else if (treatment === "Yes") {
+            generateCodeSnippet(t, writer, snippetTemplatesHighlighted, treatment);
         }
     }
 
 }};
 
-function generateCodeSnippet(t, writer, snippetTemplates, test0, test1) {
-    const totalStatements = 4;
+function generateCodeSnippet(t, writer, snippetTemplates) {
+    const totalStatements = 3;
     const chosenSnippets = [];
     let countConditionals = 0;
-    let lastConditionalType = null;
-
+    let totalLiteralCount = 0;
 
     for (let i = 0; i < totalStatements; i++) {
-        let allowedTypes;
-
-        switch (lastConditionalType) {
-            case null:
-            case "else":
-                allowedTypes = ["if", null]; // Start new chain or non-conditional
-                break;
-            case "if":
-                allowedTypes = ["else if", "else", "if", null]; // Continue or branch
-                break;
-            case "else if":
-                allowedTypes = ["else", "if", null]; // End branch or start new
-                break;
-        }
-
-        const candidates = snippetTemplates.filter(s =>
-            allowedTypes.includes(s.conditionalType)
-        );
-
-        const snippet = candidates[Nof1.new_random_integer(candidates.length)];
+        let snippet = snippetTemplates[Nof1.new_random_integer(snippetTemplates.length)];
         chosenSnippets.push(snippet);
-
-        if (snippet.isConditional) {
-            countConditionals++;
-            lastConditionalType = snippet.conditionalType;
-        } else {
-            lastConditionalType = null;
-        }
+        totalLiteralCount += snippet.literalCount;
     }
-
-
-    const x = Nof1.new_random_integer(10);
-    const y = Nof1.new_random_integer(10);
 
     let codeLines = [];
 
-    const methodHeader1 = [
-        "public class Example {",
-        "public static void main(String[] args) {",
-        `int x = ${x};`,
-        `int y = ${y};`,
-        "int z = x + y;"
-    ];
-
-    const methodHeader2 = [
-        "public class Example {",
-        "    public static void main(String[] args) {",
-        `        int x = ${x};`,
-        `        int y = ${y};`,
-        "        int z = x + y;"
-    ];
-
-    const methodHeader3 = [
-        '<span style="color:blue;">public class</span> Example {',
-        '<span style="color:blue;">public static void</span> main(<span style="color:blue;">String</span>[] args) {',
-        `<span style="color:blue;">int</span> x = ${x};`,
-        `<span style="color:blue;">int</span> y = ${y};`,
-        '<span style="color:blue;">int</span> z = x + y;'
-    ];
-
-
-    const methodHeader4 = [
-        '<span style="color:blue;">public class</span> Example {',
-        '    <span style="color:blue;">public static void</span> main(<span style="color:blue;">String</span>[] args) {',
-        `        <span style="color:blue;">int</span> x = ${x};`,
-        `        <span style="color:blue;">int</span> y = ${y};`,
-        '        <span style="color:blue;">int</span> z = x + y;'
-    ];
-
-
-    if (test0 === "None" && test1 === "Standard") {
-        codeLines.push(...methodHeader1);
-        for (const snippet of chosenSnippets) {
-            for (const line of snippet.lines) {
-                codeLines.push("" + line);
-            }
+// Create one confusing line by joining fragments with +
+    let concatenatedLine = "";
+    for (let i = 0; i < chosenSnippets.length; i++) {
+        const snippet = chosenSnippets[i];
+        concatenatedLine += snippet.fragment;
+        if (i < chosenSnippets.length - 1) {
+            concatenatedLine += " + ";
         }
-        codeLines.push("}");
-        codeLines.push("}");
-
-    } else if (test0 === "Highlighted" && test1 === "Standard") {
-        codeLines.push(...methodHeader3);
-        for (const snippet of chosenSnippets) {
-            for (const line of snippet.lines) {
-                codeLines.push("" + line);
-            }
-        }
-        codeLines.push("}");
-        codeLines.push("}");
-
-    } else if (test0 === "None" && test1 === "Indented") {
-        codeLines.push(...methodHeader2);
-        for (const snippet of chosenSnippets) {
-            for (const line of snippet.lines) {
-                codeLines.push("        " + line);
-            }
-        }
-        codeLines.push("    }");
-        codeLines.push("}");
-
-    } else if (test0 === "Highlighted" && test1 === "Indented") {
-        codeLines.push(...methodHeader4);
-        for (const snippet of chosenSnippets) {
-            for (const line of snippet.lines) {
-                codeLines.push("        " + line);
-            }
-        }
-        codeLines.push("    }");
-        codeLines.push("}");
-
     }
+
+    codeLines.push(concatenatedLine); // single confusing one-liner
 
 
     t.do_print_task = () => {
         writer.clear_stage();
-
         writer.print_html_on_stage(
             "<div class='sourcecode'><pre><code>" + codeLines.join("\n") + "</code></pre></div>"
         );
     };
 
-    t.expected_answer = "" + countConditionals;
+    t.expected_answer = "" + totalLiteralCount;
 
     t.accepts_answer_function = (given_answer) => /^[0-9]$/.test(given_answer);
 
