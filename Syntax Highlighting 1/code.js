@@ -172,7 +172,7 @@ function generateCodeSnippet(t, writer, snippetTemplates) {
         }
     }
 
-    codeLines.push(concatenatedLine); 
+    codeLines.push(concatenatedLine);
 
 
     t.do_print_task = () => {
