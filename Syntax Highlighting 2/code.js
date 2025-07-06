@@ -42,6 +42,8 @@ let experiment_configuration_function = (writer) => { return {
     task_configuration: (t) => {
         let treatment = t.treatment_combination[0].value;
 
+            // { fragment: 'abcdefghijabcdefghijabcdefghijabcdefghij', literalCount: 1 }, //test40
+
         const snippetTemplates = [
 
             { fragment: '"if (x > 0) \\"then\\""', literalCount: 1 },
