@@ -163,7 +163,6 @@ function generateCodeSnippet(t, writer, snippetTemplates) {
 
     let codeLines = [];
 
-// Create one confusing line by joining fragments with +
     let concatenatedLine = "";
     for (let i = 0; i < chosenSnippets.length; i++) {
         const snippet = chosenSnippets[i];
@@ -173,7 +172,7 @@ function generateCodeSnippet(t, writer, snippetTemplates) {
         }
     }
 
-    codeLines.push(concatenatedLine); // single confusing one-liner
+    codeLines.push(concatenatedLine);
 
 
     t.do_print_task = () => {
