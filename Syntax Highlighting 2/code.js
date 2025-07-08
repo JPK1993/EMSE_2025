@@ -44,96 +44,61 @@ let experiment_configuration_function = (writer) => { return {
 
             // { fragment: 'abcdefghijabcdefghijabcdefghijabcdefghij', literalCount: 1 }, //test40
 
+
         const snippetTemplates = [
 
-            { fragment: '"if (x > 0) \\"then\\""', literalCount: 1 },
-            { fragment: '"else if (x == 0)"', literalCount: 1 },
-            { fragment: '"else { \\"fallback\\" }"', literalCount: 1 },
-            { fragment: '"while (flag) { \\"loop\\" }"', literalCount: 1 },
-            { fragment: '"condition?" + "\\"true\\"" + "\\"false\\""', literalCount: 3 },
-            { fragment: '"x < 10 && y > 5"', literalCount: 1 },
-            { fragment: '"switch (val) { case 1: break; }"', literalCount: 1 },
-            { fragment: '"if (" + varName + ")"', literalCount: 1 }, // only one literal: "if ("
-            { fragment: '"} else if (" + input + ".equals(\\"exit\\")) {"', literalCount: 2 },
+            { fragment: '"r4nd0m_g1bb3r1sh____w1th__extras!!!!!!"', literalCount: 1 },
+            { fragment: '"<<<<<<__SYNTAX__ERROR__EMULATOR__>>>>>"', literalCount: 1 },
+            { fragment: '"\\\\this\\\\"is\\\\"a\\\"weird\\\"case"', literalCount: 1 },
+            { fragment: '"___ONLY__ONE__LITERAL_PRESENT_HERE____"', literalCount: 1 },
+            { fragment: '"A_%%%%_%%%%_%%%%_%%%%_%%%%_%%%%_%%%%_A"', literalCount: 1 },
 
-            { fragment: '"The result is: "', literalCount: 1 },
-            { fragment: '"Value: " + "\\"42\\""', literalCount: 2 },
-            { fragment: '"name" + "\\" \\"" + "surname"', literalCount: 3 },
-            { fragment: '"System.out.println(" + "\\"Hello\\" + ")"', literalCount: 3 },
-            { fragment: '"+" + "\\"sum\\"" + "+"', literalCount: 3 },
-            { fragment: '"\\"Quoted\\"" + " text inside"', literalCount: 2 },
-            { fragment: '"Escape this: " + "\\"\\\\\\"" ', literalCount: 2 },
-            { fragment: '"[DEBUG] Output: "', literalCount: 1 },
-            { fragment: '"Hello, " + "\\"world\\"!"', literalCount: 2 },
-            { fragment: '"Total = " + total', literalCount: 1 },
-            { fragment: '"--End of Line--"', literalCount: 1 }
+            { fragment: 'zqvDataHandler_9000 + "glorbix_42_12345"', literalCount: 1 },
+            { fragment: '"xyz\\"\\"\\abc" + signal_strength_xyxyx', literalCount: 1 },
+            { fragment: '"blurt\\"zed" + _cacheResultTempVal12345', literalCount: 1 },
+            { fragment: '"vex--core--ultra" + tripleEncode(alpha)', literalCount: 1 },
+            { fragment: 'tokenStreamVariable + "\\\\"escaped\\\""', literalCount: 1 },
+
+            { fragment: '"alpha_" + "_bravoSequence42XYZ__123456"', literalCount: 2 },
+            { fragment: '"####/\//" + "____chunk_02_complete____"', literalCount: 2 },
+            { fragment: '"start-->" + "<-----finish_payload_____"', literalCount: 2 },
+            { fragment: '"__init__" + configPath + "____done____"', literalCount: 2 },
+            { fragment: 'errorStatus + "\\\\flag" + "!!!reset!!!"', literalCount: 2 },
+
+            { fragment: '"alpha" + "beta" + "____gamma__________"', literalCount: 3 },
+            { fragment: '"1234" + "4567" + "78910_padding_______"', literalCount: 3 },
+            { fragment: '"!!" + "__" + "##__END_FRAGMENT____////"', literalCount: 3 },
+            { fragment: '"err" + codeLevel + "msg" + "___end____"', literalCount: 3 },
+            { fragment: '"pre" + dataChunk + "mid" + Val + "post"', literalCount: 3 },
+
         ];
 
 
         const snippetTemplatesHighlighted = [
-            { fragment: '<span style="background-color:red;color:white;">"if (x > 0) \\"then\\""</span>', literalCount: 1 },
-            { fragment: '<span style="background-color:red;color:white;">"else if (x == 0)"</span>', literalCount: 1 },
-            { fragment: '<span style="background-color:red;color:white;">"else { \\"fallback\\" }"</span>', literalCount: 1 },
-            { fragment: '<span style="background-color:red;color:white;">"while (flag) { \\"loop\\" }"</span>', literalCount: 1 },
-            { fragment:
-                    '<span style="background-color:red;color:white;">"condition?"</span> + ' +
-                    '<span style="background-color:red;color:white;">"\\"true\\""</span> + ' +
-                    '<span style="background-color:red;color:white;">"\\"false\\""</span>',
-                literalCount: 3
-            },
-            { fragment: '<span style="background-color:red;color:white;">"x < 10 && y > 5"</span>', literalCount: 1 },
-            { fragment: '<span style="background-color:red;color:white;">"switch (val) { case 1: break; }"</span>', literalCount: 1 },
-            { fragment: '<span style="background-color:red;color:white;">"if ("</span> + ' +
-                        'varName +' +
-                    '   <span style="background-color:red;color:white;">")"</span>', literalCount: 2 },
-            { fragment:
-                    '<span style="background-color:red;color:white;">"} else if ("</span> + input + ' +
-                    '<span style="background-color:red;color:white;">".equals(\\"exit\\")) {"</span>',
-                literalCount: 2
-            },
 
-            { fragment: '<span style="background-color:red;color:white;">"The result is: "</span>', literalCount: 1 },
-            { fragment:
-                    '<span style="background-color:red;color:white;">"Value: "</span> + ' +
-                    '<span style="background-color:red;color:white;">"\\"42\\""</span>',
-                literalCount: 2
-            },
-            { fragment:
-                    '<span style="background-color:red;color:white;">"name"</span> + ' +
-                    '<span style="background-color:red;color:white;">"\\" \\""</span> + ' +
-                    '<span style="background-color:red;color:white;">"surname"</span>',
-                literalCount: 3
-            },
-            { fragment:
-                    '<span style="background-color:red;color:white;">"System.out.println("</span> + ' +
-                    '<span style="background-color:red;color:white;">"\\"Hello\\""</span> +' +
-                    '<span style="background-color:red;color:white;">")"</span>',
-                literalCount: 3
-            },
-            { fragment:
-                    '<span style="background-color:red;color:white;">"+" </span> + ' +
-                    '<span style="background-color:red;color:white;">"\\"sum\\""</span> + ' +
-                    '<span style="background-color:red;color:white;">"+" </span>',
-                literalCount: 3
-            },
-            { fragment:
-                    '<span style="background-color:red;color:white;">"\\"Quoted\\""</span> + ' +
-                    '<span style="background-color:red;color:white;">" text inside"</span>',
-                literalCount: 2
-            },
-            { fragment:
-                    '<span style="background-color:red;color:white;">"Escape this: "</span> + ' +
-                    '<span style="background-color:red;color:white;">"\\"\\\\\\"" </span>',
-                literalCount: 2
-            },
-            { fragment: '<span style="background-color:red;color:white;">"[DEBUG] Output: "</span>', literalCount: 1 },
-            { fragment:
-                    '<span style="background-color:red;color:white;">"Hello, "</span> + ' +
-                    '<span style="background-color:red;color:white;">"\\"world\\"!"</span>',
-                literalCount: 2
-            },
-            { fragment: '<span style="background-color:red;color:white;">"Total = "</span> + total', literalCount: 1 },
-            { fragment: '<span style="background-color:red;color:white;">"--End of Line--"</span>', literalCount: 1 }
+            { fragment: '<span style="background-color:red;color:white;">"r4nd0m_g1bb3r1sh____w1th__extras!!!!!!"</span>', literalCount: 1 },
+            { fragment: '<span style="background-color:red;color:white;">"<<<<<<__SYNTAX__ERROR__EMULATOR__>>>>>"</span>', literalCount: 1 },
+            { fragment: '<span style="background-color:red;color:white;">"\\\\this\\\\"is\\\\"a\\\"weird\\\"case"</span>', literalCount: 1 },
+            { fragment: '<span style="background-color:red;color:white;">"___ONLY__ONE__LITERAL_PRESENT_HERE____"</span>', literalCount: 1 },
+            { fragment: '<span style="background-color:red;color:white;">"A_%%%%_%%%%_%%%%_%%%%_%%%%_%%%%_%%%%_A"</span>', literalCount: 1 },
+
+            { fragment: 'zqvDataHandler_9000 + <span style="background-color:red;color:white;">"glorbix_42_12345"</span>', literalCount: 1 },
+            { fragment: '<span style="background-color:red;color:white;">"xyz\\"\\"\\abc"</span> + signal_strength_xyxyx', literalCount: 1 },
+            { fragment: '<span style="background-color:red;color:white;">"blurt\\"zed"</span> + _cacheResultTempVal12345', literalCount: 1 },
+            { fragment: '<span style="background-color:red;color:white;">"vex--core--ultra"</span> + tripleEncode(alpha)', literalCount: 1 },
+            { fragment: 'tokenStreamVariable + <span style="background-color:red;color:white;">"\\\\\\"escaped\\\""</span>', literalCount: 1 },
+
+            { fragment: '<span style="background-color:red;color:white;">"alpha_"</span> + <span style="background-color:red;color:white;">"_bravoSequence42XYZ__123456"</span>', literalCount: 2 },
+            { fragment: '<span style="background-color:red;color:white;">"####/\\//"</span> + <span style="background-color:red;color:white;">"____chunk_02_complete____"</span>', literalCount: 2 },
+            { fragment: '<span style="background-color:red;color:white;">"start-->"</span> + <span style="background-color:red;color:white;">"<-----finish_payload_____"</span>', literalCount: 2 },
+            { fragment: '<span style="background-color:red;color:white;">"__init__"</span> + configPath + <span style="background-color:red;color:white;">"____done____"</span>', literalCount: 2 },
+            { fragment: 'errorStatus + <span style="background-color:red;color:white;">"\\\\flag"</span> + <span style="background-color:red;color:white;">"!!!reset!!!"</span>', literalCount: 2 },
+
+            { fragment: '<span style="background-color:red;color:white;">"alpha"</span> + <span style="background-color:red;color:white;">"beta"</span> + <span style="background-color:red;color:white;">"____gamma__________"</span>', literalCount: 3 },
+            { fragment: '<span style="background-color:red;color:white;">"1234"</span> + <span style="background-color:red;color:white;">"4567"</span> + <span style="background-color:red;color:white;">"78910_padding_______"</span>', literalCount: 3 },
+            { fragment: '<span style="background-color:red;color:white;">"!!"</span> + <span style="background-color:red;color:white;">"__"</span> + <span style="background-color:red;color:white;">"##__END_FRAGMENT____////"</span>', literalCount: 3 },
+            { fragment: '<span style="background-color:red;color:white;">"err"</span> + codeLevel + <span style="background-color:red;color:white;">"msg"</span> + <span style="background-color:red;color:white;">"___end____"</span>', literalCount: 3 },
+            { fragment: '<span style="background-color:red;color:white;">"pre"</span> + dataChunk + <span style="background-color:red;color:white;">"mid"</span> + Val + <span style="background-color:red;color:white;">"post"</span>', literalCount: 3 },
 
         ];
 
